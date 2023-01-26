@@ -28,11 +28,11 @@ apply plugin: 'com.github.ben-manes.versions'
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" }
+        gradlePluginPortal()
     }
-  dependencies { classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0' }
+  dependencies { classpath 'com.github.ben-manes:gradle-versions-plugin:0.42.0' }
 }
-dependencyUpdates.resolutionStrategy = { componentSelection { rules -> rules.all { ComponentSelection selection ->
+dependencyUpdates.resolutionStrategy { componentSelection { rules -> rules.all { ComponentSelection selection ->
     boolean rejected = ['alpha', 'beta', 'rc', 'cr', 'm'].any { qualifier -> selection.candidate.version ==~ /(?i).*[.-]${qualifier}[.\d-]*/ }
     if (rejected) selection.reject('Release candidate')
 } } }
@@ -47,13 +47,13 @@ tasks.withType(JavaCompile) { options.compilerArgs << "-proc:none" }
 tasks.withType(GroovyCompile) { options.compilerArgs << "-proc:none" }
 
 dependencies {
-    compile project(':framework')
+    implementation project(':framework')
 
     // SSHJ - Apache 2.0 - https://github.com/hierynomus/sshj
-    compile 'com.hierynomus:sshj:0.31.0'
+    implementation 'com.hierynomus:sshj:0.31.0'
 
     // Apache Mina SSHD - Apache 2.0 - https://mina.apache.org/sshd-project/index.html
-    compile 'org.apache.sshd:sshd-sftp:2.7.0'
+    implementation 'org.apache.sshd:sshd-sftp:2.7.0'
 }
 
 // by default the Java plugin runs test on build, change to not do that (only run test if explicit task)
@@ -68,7 +68,7 @@ jar {
     archiveBaseName = jarBaseName
 }
 task copyDependencies { doLast {
-    copy { from (configurations.runtime - project(':framework').configurations.runtime - project(':framework').jar.archivePath)
+    copy { from (configurations.runtimeClasspath - project(':framework').configurations.runtimeClasspath - project(':framework').jar.archivePath)
         into file(projectDir.absolutePath + '/lib') }
 } }
 copyDependencies.dependsOn cleanLib
