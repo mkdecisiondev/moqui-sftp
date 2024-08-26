@@ -56,7 +56,7 @@ dependencies {
     implementation 'org.apache.sshd:sshd-sftp:2.10.0'
 
     // explicit dependencies to get newer versions
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.75'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.78.1'
     implementation 'org.slf4j:jcl-over-slf4j:2.0.3'
 }
 
